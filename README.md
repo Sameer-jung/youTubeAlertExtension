@@ -1,3 +1,5 @@
+# ytExtension
+
  <h1>YouTube Alert Extension</h1>
   <h2>Description</h2>
   <p>The YouTube Alert Extension is designed to help users stay focused while browsing YouTube. It alerts users to avoid distractions and provides an option to customize alert messages. The extension also includes a feature to toggle the visibility of video thumbnails, helping to minimize visual distractions.</p>

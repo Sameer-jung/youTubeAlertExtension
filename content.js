@@ -16,7 +16,6 @@ function handleVideoLinkClick(event) {
   showCustomAlert(); // Show the custom alert message
 }
 
-
 // Function to add click listeners to video links
 function addVideoLinkListeners() {
   console.log('Adding video link listeners');
@@ -25,28 +24,6 @@ function addVideoLinkListeners() {
     link.addEventListener('click', handleVideoLinkClick);
   });
 }
-
-// Function to handle mutations in the DOM
-function handleDOMMutations(mutationsList, observer) {
-  for (const mutation of mutationsList) {
-    if (mutation.type === 'childList' || mutation.type === 'subtree') {
-      addVideoLinkListeners();
-    }
-  }
-}
-
-// Initialize MutationObserver
-const observer = new MutationObserver(handleDOMMutations);
-
-// Start observing changes in the DOM
-observer.observe(document.documentElement, {
-  childList: true,
-  subtree: true
-});
-
-// Initial addition of event listeners
-addVideoLinkListeners();
-
 
 // Function to retrieve whitelisted channels from Chrome storage
 function getWhitelistedChannels(callback) {
@@ -76,6 +53,8 @@ function filterVideosBasedOnWhitelist(whitelistedChannels) {
 function handleDOMMutations(mutationsList, observer) {
   for (const mutation of mutationsList) {
     if (mutation.type === 'childList' || mutation.type === 'subtree') {
+      // Perform both actions: adding listeners and filtering videos
+      addVideoLinkListeners();
       getWhitelistedChannels((whitelistedChannels) => {
         filterVideosBasedOnWhitelist(whitelistedChannels);
       });
@@ -92,3 +71,5 @@ observer.observe(document.documentElement, {
   subtree: true
 });
 
+// Initial addition of event listeners
+addVideoLinkListeners();

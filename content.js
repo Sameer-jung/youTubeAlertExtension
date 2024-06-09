@@ -25,29 +25,69 @@ function addVideoLinkListeners() {
   });
 }
 
-// Function to retrieve whitelisted channels from Chrome storage
-function getWhitelistedChannels(callback) {
-  chrome.storage.sync.get('whitelistedChannels', (data) => {
-    const whitelistedChannels = data.whitelistedChannels || [];
-    callback(whitelistedChannels);
+// Function to hide thumbnails
+function hideThumbnails() {
+  const thumbnails = document.querySelectorAll('ytd-thumbnail');
+  thumbnails.forEach(thumbnail => {
+    thumbnail.style.opacity = 0; // Hide thumbnails
   });
 }
 
-// Function to filter videos based on whitelisted channels
-function filterVideosBasedOnWhitelist(whitelistedChannels) {
-  console.log('Filtering videos based on whitelist');
-  const videoElements = document.querySelectorAll('ytd-grid-video-renderer');
-  videoElements.forEach((videoElement) => {
-    const channelElement = videoElement.querySelector('ytd-channel-name a');
-    if (channelElement) {
-      const channel = channelElement.textContent.trim();
-      if (!whitelistedChannels.includes(channel)) {
-        // Hide the video if its channel is not in the whitelist
-        videoElement.style.display = 'none';
-      }
-    }
+// Function to show thumbnails
+function showThumbnails() {
+  const thumbnails = document.querySelectorAll('ytd-thumbnail');
+  thumbnails.forEach(thumbnail => {
+    thumbnail.style.opacity = 1; // Show thumbnails
   });
 }
+
+let thumbnailsEnabled = false;
+
+// Function to handle toggle button click
+function handleToggleThumbnails() {
+  thumbnailsEnabled = !thumbnailsEnabled; // Toggle thumbnails state
+  if (thumbnailsEnabled) {
+    showThumbnails(); // If enabled, show thumbnails
+  } else {
+    hideThumbnails(); // If disabled, hide thumbnails
+  }
+}
+
+// Function to add event listener for toggle button
+function addToggleThumbnailsListener() {
+  const toggleButton = document.getElementById('toggleThumbnails');
+  if (toggleButton) {
+    toggleButton.addEventListener('click', handleToggleThumbnails);
+  } else {
+    console.error('Toggle button not found.');
+  }
+}
+
+// Add event listener for DOMContentLoaded to ensure the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+  hideThumbnails(); // Hide thumbnails by default
+  addToggleThumbnailsListener(); // Add event listener for toggle button
+});
+
+// Function to handle hiding thumbnails when mouse enters the page
+function handleMouseEnter() {
+  if (!thumbnailsEnabled) {
+    hideThumbnails();
+  }
+}
+
+// Add event listener for mouse enter
+document.addEventListener('mouseenter', handleMouseEnter);
+
+// Function to handle showing thumbnails when mouse leaves the page
+function handleMouseLeave() {
+  if (!thumbnailsEnabled) {
+    showThumbnails();
+  }
+}
+
+// Add event listener for mouse leave
+document.addEventListener('mouseleave', handleMouseLeave);
 
 // Function to handle mutations in the DOM
 function handleDOMMutations(mutationsList, observer) {
@@ -73,6 +113,3 @@ observer.observe(document.documentElement, {
 
 // Initial addition of event listeners
 addVideoLinkListeners();
-
-
-// cheking my githubb repo
